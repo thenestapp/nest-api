@@ -5,7 +5,7 @@
   "description": "Create new AI agent application with Nest",
   "type": "module",
   "bin": {
-    "create-nest-ai"dist/index.js"
+    "create-nest-ai": "dist/index.js"
   },
   "scripts": {
     "prepare": "bun run build",
@@ -21,7 +21,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/callstackincubator/nest-ait",
-    "directory": "packages/create-nest-ai
+    "directory": "packages/create-nest-ai"
   },
   "author": "Mike Grabowski <mike@callstack.com> (https://github.com/grabbou)",
   "bugs": {

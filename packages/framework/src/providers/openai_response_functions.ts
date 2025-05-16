@@ -1,9 +1,9 @@
-import { randomUUID } from 'node:crypto'
+import { randomUUID } from "node:crypto";
 
-import OpenAI, { ClientOptions } from 'openai'
+import OpenAI, { ClientOptions } from "openai";
 
-import { Provider, responseAsToolCall, toLLMTools } from '../models.js'
-import { OpenAIProviderOptions as BaseOpenAIProviderOptions } from './openai.js'
+import { Provider, responseAsToolCall, toLLMTools } from "../models.js";
+import { OpenAIProviderOptions as BaseOpenAIProviderOptions } from "./openai.js";
 
 /**
  * Required options for the OpenAI-compatible provider.
@@ -13,17 +13,17 @@ export type OpenAIProviderOptions = BaseOpenAIProviderOptions & {
    * Since this is meant to be used with OpenAI-compatible providers,
    * we do not provide any defaults.
    */
-  model: string
+  model: string;
   /**
    * Client options.
    */
-  options: ClientOptions
+  options: ClientOptions;
   /**
    * Whether to use strict mode.
    * @default false
    */
-  strictMode?: boolean
-}
+  strictMode?: boolean;
+};
 
 /**
  * OpenAI provider.
@@ -32,35 +32,41 @@ export type OpenAIProviderOptions = BaseOpenAIProviderOptions & {
  * but tools as response to enforce the right JSON schema.
  */
 export const openai = (options: OpenAIProviderOptions): Provider => {
-  const { model, options: clientOptions, strictMode = false, body = {} } = options
-  const client = new OpenAI(clientOptions)
+  const {
+    model,
+    options: clientOptions,
+    strictMode = false,
+    body = {},
+  } = options;
+  const client = new OpenAI(clientOptions);
 
   return {
     chat: async ({ messages, response_format, temperature, ...options }) => {
-      const tools = 'tools' in options ? toLLMTools(options.tools, strictMode) : []
+      const tools =
+        "tools" in options ? toLLMTools(options.tools, strictMode) : [];
 
       const response = await client.chat.completions.create({
         model,
         tools: [...tools, ...responseAsToolCall(response_format, strictMode)],
         messages,
         temperature,
-        tool_choice: 'required',
+        tool_choice: "required",
         ...body,
-      })
+      });
 
       /**
        * Tool choice is required. If tools are missing in the response,
        * we throw an error.
        */
-      const message = response.choices[0].message
+      const message = response.choices[0].message;
       if (!message.tool_calls) {
-        throw new Error('No response in message')
+        throw new Error("No response in message");
       }
 
       /**
        * If LLM wants to call a tool that is a response, we return that response.
        */
-      const firstToolCall = message.tool_calls[0]
+      const firstToolCall = message.tool_calls[0];
       if (Object.keys(response_format).includes(firstToolCall.function.name)) {
         /**
          * Just in case LLM called multiple tools, including response as tool,
@@ -68,18 +74,18 @@ export const openai = (options: OpenAIProviderOptions): Provider => {
          */
         if (message.tool_calls.length > 1) {
           throw new Error(
-            `When calling one of ${Object.keys(response_format).join(', ')}, you cannot call other tools.`
-          )
+            `When calling one of ${Object.keys(response_format).join(", ")}, you cannot call other tools.`,
+          );
         }
-        const schema = response_format[firstToolCall.function.name]
+        const schema = response_format[firstToolCall.function.name];
         return {
           type: firstToolCall.function.name,
           value: schema.parse(JSON.parse(firstToolCall.function.arguments)),
-        }
+        };
       }
 
       return {
-        type: 'tool_call',
+        type: "tool_call",
         value: message.tool_calls.map((tollCall) => ({
           ...tollCall,
           /**
@@ -97,7 +103,7 @@ export const openai = (options: OpenAIProviderOptions): Provider => {
             parsed_arguments: JSON.parse(tollCall.function.arguments),
           },
         })),
-      }
+      };
     },
-  }
-}
+  };
+};

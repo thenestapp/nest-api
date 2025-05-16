@@ -1,18 +1,18 @@
-import OpenAI, { ClientOptions as OpenAIOptions } from 'openai'
+import OpenAI, { ClientOptions as OpenAIOptions } from "openai";
 
-import { Provider, responseAsStructuredOutput, toLLMTools } from '../models.js'
+import { Provider, responseAsStructuredOutput, toLLMTools } from "../models.js";
 
 export type OpenAIProviderOptions = {
   /**
    * Model to use.
    */
-  model?: string
-  options?: OpenAIOptions
+  model?: string;
+  options?: OpenAIOptions;
   /**
    * Additional body parameters.
    */
-  body?: Record<string, any>
-}
+  body?: Record<string, any>;
+};
 
 /**
  * OpenAI provider.
@@ -23,12 +23,12 @@ export type OpenAIProviderOptions = {
  * otherwise you will get an error. Otherwise, use the one from `openai_response_functions.js` instead.
  */
 export const openai = (options: OpenAIProviderOptions = {}): Provider => {
-  const { model = 'gpt-4o', options: clientOptions, body = {} } = options
-  const client = new OpenAI(clientOptions)
+  const { model = "gpt-4o", options: clientOptions, body = {} } = options;
+  const client = new OpenAI(clientOptions);
 
   return {
     chat: async ({ messages, response_format, temperature, ...options }) => {
-      const mappedTools = 'tools' in options ? toLLMTools(options.tools) : []
+      const mappedTools = "tools" in options ? toLLMTools(options.tools) : [];
 
       const response = await client.beta.chat.completions.parse({
         model,
@@ -37,21 +37,21 @@ export const openai = (options: OpenAIProviderOptions = {}): Provider => {
         temperature,
         response_format: responseAsStructuredOutput(response_format),
         ...body,
-      })
+      });
 
-      const message = response.choices[0].message
+      const message = response.choices[0].message;
       if (message.tool_calls.length > 0) {
         return {
-          type: 'tool_call',
+          type: "tool_call",
           value: message.tool_calls,
-        }
+        };
       }
 
       if (!message.parsed?.response) {
-        throw new Error('No response in message')
+        throw new Error("No response in message");
       }
 
-      return message.parsed.response
+      return message.parsed.response;
     },
-  }
-}
+  };
+};

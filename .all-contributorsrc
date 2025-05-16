@@ -1,9 +1,7 @@
 {
   "projectName": "ai-agent-framework",
   "projectOwner": "callstackincubator",
-  "files": [
-    "README.md"
-  ],
+  "files": ["README.md"],
   "commitType": "docs",
   "commitConvention": "angular",
   "contributorsPerLine": 7,
@@ -13,18 +11,14 @@
       "name": "Mike",
       "avatar_url": "https://avatars.githubusercontent.com/u/2464966?v=4",
       "profile": "https://github.com/grabbou",
-      "contributions": [
-        "code"
-      ]
+      "contributions": ["code"]
     },
     {
       "login": "pkarw",
       "name": "Piotr Karwatka",
       "avatar_url": "https://avatars.githubusercontent.com/u/211899?v=4",
       "profile": "http://catchthetornado.com",
-      "contributions": [
-        "code"
-      ]
+      "contributions": ["code"]
     }
   ]
 }

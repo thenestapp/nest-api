@@ -1,16 +1,16 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { agent } from 'nest-ai/agent'
-import { workflow } from 'nest-airkflow'
+import { agent } from "nest-ai/agent";
+import { workflow } from "nest-airkflow";
 
-import { lookupWikipedia } from './tools/wikipedia.js'
+import { lookupWikipedia } from "./tools/wikipedia.js";
 
 const personalizedActivityPlanner = agent({
   description: `
     You are skilled at researching and finding cool things to do at the destination,
     including activities and events that match the traveler's interests and age group.
   `,
-})
+});
 
 const landmarkScout = agent({
   description: `
@@ -20,7 +20,7 @@ const landmarkScout = agent({
   tools: {
     lookupWikipedia,
   },
-})
+});
 
 const restaurantScout = agent({
   description: `
@@ -29,13 +29,13 @@ const restaurantScout = agent({
     Your find highly-rated restaurants and dining experiences at the destination,
     and recommend scenic locations and fun activities.
   `,
-})
+});
 
 const itineraryCompiler = agent({
   description: `
     With an eye for detail, you organize all the information into a coherent and enjoyable travel plan.
   `,
-})
+});
 
 export const researchTripWorkflow = workflow({
   team: {
@@ -76,4 +76,4 @@ export const researchTripWorkflow = workflow({
   // }),
   // Grok
   // provider: grok(),
-})
+});

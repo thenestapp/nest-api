@@ -1,30 +1,30 @@
-import * as path from 'node:path'
+import * as path from "node:path";
 
-import { defineConfig } from 'rspress/config'
+import { defineConfig } from "rspress/config";
 // import { pluginTypeDoc } from '@rspress/plugin-typedoc'
-import ghPages from 'rspress-plugin-gh-pages'
+import ghPages from "rspress-plugin-gh-pages";
 
 export default defineConfig({
-  root: path.join(__dirname, 'docs'),
-  title: 'Nest',
-  icon: '/rspress-icon.png',
+  root: path.join(__dirname, "docs"),
+  title: "Nest",
+  icon: "/rspress-icon.png",
   logo: {
-    light: '/rspress-light-logo.png',
-    dark: '/rspress-dark-logo.png',
+    light: "/rspress-light-logo.png",
+    dark: "/rspress-dark-logo.png",
   },
   themeConfig: {
     socialLinks: [
       {
-        icon: 'github',
-        mode: 'link',
-        content: 'https://github.com/callstackincubator/ai-agent-framework',
+        icon: "github",
+        mode: "link",
+        content: "https://github.com/callstackincubator/ai-agent-framework",
       },
     ],
   },
   plugins: [
     ghPages({
-      repo: 'https://github.com/callstackincubator/nest-ai.git',
-      branch: 'website',
+      repo: "https://github.com/callstackincubator/nest-ai.git",
+      branch: "website",
     }),
     // pluginTypeDoc({
     //   entryPoints: [
@@ -37,4 +37,4 @@ export default defineConfig({
     //   ],
     // }),
   ],
-})
+});

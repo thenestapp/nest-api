@@ -1,11 +1,11 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { httpTool } from '@nest-ai/tools/http'
-import { agent } from 'nest-aient'
-import { solution } from 'nest-ailution'
-import { teamwork } from 'nest-aiamwork'
-import { logger } from 'nest-ailemetry'
-import { workflow } from 'nest-airkflow'
+import { httpTool } from "@nest-ai/tools/http";
+import { agent } from "nest-aient";
+import { solution } from "nest-ailution";
+import { teamwork } from "nest-aiamwork";
+import { logger } from "nest-ailemetry";
+import { workflow } from "nest-airkflow";
 
 const browser = agent({
   description: `
@@ -16,13 +16,13 @@ const browser = agent({
   tools: {
     httpTool,
   },
-})
+});
 
 const wrapupRedactor = agent({
   description: `
     Your role is to check Github project details and check for latest issues.
   `,
-})
+});
 
 const checkupGithubProject = workflow({
   team: { browser, wrapupRedactor },
@@ -39,8 +39,8 @@ const checkupGithubProject = workflow({
     - Include the actual number of star gazers.
   `,
   snapshot: logger,
-})
+});
 
-const result = await teamwork(checkupGithubProject)
+const result = await teamwork(checkupGithubProject);
 
-console.log(solution(result))
+console.log(solution(result));

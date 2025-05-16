@@ -1,10 +1,10 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { solution } from 'nest-ai/solution'
-import { teamwork } from 'nest-aiamwork'
+import { solution } from "nest-ai/solution";
+import { teamwork } from "nest-aiamwork";
 
-import { productDescriptionWorkflow } from './ecommerce_product_description.config.js'
+import { productDescriptionWorkflow } from "./ecommerce_product_description.config.js";
 
-const result = await teamwork(productDescriptionWorkflow)
+const result = await teamwork(productDescriptionWorkflow);
 
-console.log(solution(result))
+console.log(solution(result));

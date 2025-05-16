@@ -1,9 +1,9 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { visionTool } from '@nest-ai/tools/vision'
-import { agent } from 'nest-aient'
-import { workflow } from 'nest-airkflow'
-import path from 'path'
+import { visionTool } from "@nest-ai/tools/vision";
+import { agent } from "nest-aient";
+import { workflow } from "nest-airkflow";
+import path from "path";
 
 const techExpert = agent({
   description: `
@@ -12,7 +12,7 @@ const techExpert = agent({
   tools: {
     visionTool,
   },
-})
+});
 
 const marketingManager = agent({
   description: `
@@ -20,7 +20,7 @@ const marketingManager = agent({
     You always answer why they should buy the product, how it will make their life better, 
     and what emotions it will evoke.
   `,
-})
+});
 
 export const productDescriptionWorkflow = workflow({
   team: { techExpert, marketingManager },
@@ -29,9 +29,9 @@ export const productDescriptionWorkflow = workflow({
   `,
   knowledge: `
     Focus on all technical features of the product, including color, size, material, brand if possible, etc.
-    Picture is at "${path.resolve(import.meta.dirname, '../assets/example-sneakers.jpg')}". 
+    Picture is at "${path.resolve(import.meta.dirname, "../assets/example-sneakers.jpg")}". 
   `,
   output: `
     Catchy product description covering all the product features.
   `,
-})
+});

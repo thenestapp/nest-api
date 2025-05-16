@@ -4,7 +4,7 @@
 
 > `src/surprise_trip.ts`
 
-Creates a personalized travel itinerary for Wrocław, Poland with activities, landmarks, and restaurants. 
+Creates a personalized travel itinerary for Wrocław, Poland with activities, landmarks, and restaurants.
 
 **Actors:** Activity Planner, Landmark Scout, Restaurant Scout, Itinerary Compiler
 

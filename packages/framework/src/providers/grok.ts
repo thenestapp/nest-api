@@ -1,12 +1,12 @@
-import { Provider } from '../models.js'
-import { openai, OpenAIProviderOptions } from './openai_response_functions.js'
+import { Provider } from "../models.js";
+import { openai, OpenAIProviderOptions } from "./openai_response_functions.js";
 
 /**
  * Required options for the Groq provider.
  *
  * @see OpenAIProviderOptions
  */
-type GrokOptions = Partial<OpenAIProviderOptions>
+type GrokOptions = Partial<OpenAIProviderOptions>;
 
 /**
  * Groq provider.
@@ -19,14 +19,14 @@ type GrokOptions = Partial<OpenAIProviderOptions>
  * As of now, Grok doesn't support strict mode.
  */
 export const grok = (options: GrokOptions = {}): Provider => {
-  const { model = 'grok-beta', options: clientOptions } = options
+  const { model = "grok-beta", options: clientOptions } = options;
   return openai({
     model,
     strictMode: false,
     options: {
       apiKey: process.env.GROK_API_KEY,
-      baseURL: 'https://api.x.ai/v1',
+      baseURL: "https://api.x.ai/v1",
       ...clientOptions,
     },
-  })
-}
+  });
+};

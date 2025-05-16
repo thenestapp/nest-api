@@ -2,7 +2,7 @@
   <img src="./image.png" height="250" />
 </p>
 
-A lightweight, functional, and composable framework for building AI agents that work together to solve complex tasks. 
+A lightweight, functional, and composable framework for building AI agents that work together to solve complex tasks.
 
 Built with TypeScript and designed to be serverless-ready.
 
@@ -10,7 +10,7 @@ Built with TypeScript and designed to be serverless-ready.
 
 - [Getting Started](#getting-started)
   - [Using create-nest-ai](#using-create-nest-ai)
-  - [Manual Installation](#manual-installation) 
+  - [Manual Installation](#manual-installation)
 - [Why Another AI Agent Framework?](#why-another-ai-agent-framework)
 - [Core Concepts](#core-concepts)
   - [Easy to create and compose](#easy-to-create-and-compose)
@@ -23,7 +23,7 @@ Built with TypeScript and designed to be serverless-ready.
   - [Replacing Built-in Agents](#replacing-built-in-agents)
 - [Workflows](#workflows)
 - [Workflow States](#workflow-states)
-  - [Root State](#root-state) 
+  - [Root State](#root-state)
   - [Child State](#child-state)
   - [Delegating Tasks](#delegating-tasks)
   - [Handing off Tasks](#handing-off-tasks)
@@ -68,28 +68,28 @@ npm install nest-ai
 Here is a simple example of a workflow that researches and plans a trip to Wrocław, Poland:
 
 ```ts
-import { agent } from 'nest-aient'
-import { teamwork } from 'nest-aiamwork'
-import { solution, workflow } from 'nest-airkflow'
+import { agent } from "nest-aient";
+import { teamwork } from "nest-aiamwork";
+import { solution, workflow } from "nest-airkflow";
 
-import { lookupWikipedia } from './tools/wikipedia.js'
+import { lookupWikipedia } from "./tools/wikipedia.js";
 
 const activityPlanner = agent({
   description: `You are skilled at creating personalized itineraries...`,
-})
+});
 
 const landmarkScout = agent({
   description: `You research interesting landmarks...`,
   tools: { lookupWikipedia },
-})
+});
 
 const workflow = workflow({
   team: { activityPlanner, landmarkScout },
   description: `Plan a trip to Wrocław, Poland...`,
-})
+});
 
-const result = await teamwork(workflow)
-console.log(solution(result))
+const result = await teamwork(workflow);
+console.log(solution(result));
 ```
 
 #### Running the example
@@ -110,7 +110,7 @@ node --import=tsx your_file.ts
 
 ## Why Another AI Agent Framework?
 
-Most existing AI agent frameworks are either too complex, heavily object-oriented, or tightly coupled to specific infrastructure. 
+Most existing AI agent frameworks are either too complex, heavily object-oriented, or tightly coupled to specific infrastructure.
 
 We wanted something different - a framework that embraces functional programming principles, remains stateless, and stays laser-focused on composability.
 
@@ -145,12 +145,12 @@ Agents are specialized workers with specific roles and capabilities. Agents can 
 To create a custom agent, you can use our `agent` helper function or implement the `Agent` interface manually.
 
 ```ts
-import { agent } from 'nest-aient'
+import { agent } from "nest-aient";
 
 const myAgent = agent({
-  role: '<< your role >>',
-  description: '<< your description >>',
-})
+  role: "<< your role >>",
+  description: "<< your description >>",
+});
 ```
 
 Additionally, you can give it access to tools by passing a `tools` property to the agent. You can learn more about tools [here](#tools). You can also set custom `provider` for each agent. You can learn more about providers [here](#providers).
@@ -159,7 +159,7 @@ Additionally, you can give it access to tools by passing a `tools` property to t
 
 Nest comes with a few built-in agents that help it run your workflows out of the box.
 
-Supervisor, `supervisor`, is responsible for coordinating the workflow. 
+Supervisor, `supervisor`, is responsible for coordinating the workflow.
 It splits your workflow into smaller, more manageable parts, and coordinates the execution.
 
 Resource Planner, `resourcePlanner`, is responsible for assigning tasks to available agents, based on their capabilities.
@@ -174,16 +174,17 @@ You can overwrite built-in agents by setting it in the workflow.
 For example, to replace built-in `supervisor` agent, you can do it like this:
 
 ```ts
-import { supervisor } from './my-supervisor.js'
+import { supervisor } from "./my-supervisor.js";
 
 workflow({
   team: { supervisor },
-})
+});
 ```
 
 ## Workflows
 
 Workflows define how agents collaborate to achieve a goal. They specify:
+
 - Team members
 - Task description
 - Expected output
@@ -191,9 +192,10 @@ Workflows define how agents collaborate to achieve a goal. They specify:
 
 ## Workflow State
 
-Workflow state is a representation of the current state of the workflow. It is a tree of states, where each state represents a single agent's work. 
+Workflow state is a representation of the current state of the workflow. It is a tree of states, where each state represents a single agent's work.
 
 At each level, we have the following properties:
+
 - `agent`: name of the agent that is working on the task
 - `status`: status of the agent
 - `messages`: message history
@@ -202,6 +204,7 @@ At each level, we have the following properties:
 First element of the `messages` array is always a request to the agent, typically a user message. Everything that follows is a message history, including all the messages exchanged with the provider.
 
 Workflow can have multiple states:
+
 - `idle`: no work has been started yet
 - `running`: work is in progress
 - `paused`: work is paused and there are tools that must be called to resume
@@ -210,28 +213,28 @@ Workflow can have multiple states:
 
 ### Initial State
 
-When you run `teamwork(workflow)`, initial state is automatically created for you by calling `rootState(workflow)` behind the scenes. 
+When you run `teamwork(workflow)`, initial state is automatically created for you by calling `rootState(workflow)` behind the scenes.
 
 > [!NOTE]
 > You can also provide your own initial state (for example, to resume a workflow from a previous state). You can learn more about it in the [server-side usage](#server-side-usage) section.
 
 ### Root State
 
-Root state is a special state that contains an initial request based on the workflow and points to the `supervisor` agent, which is responsible for splitting the work into smaller, more manageable parts. 
+Root state is a special state that contains an initial request based on the workflow and points to the `supervisor` agent, which is responsible for splitting the work into smaller, more manageable parts.
 
 You can learn more about the `supervisor` agent [here](#built-in-agents).
 
 ### Child State
 
-Child state is like root state, but it points to any agent, such as one from your team. 
+Child state is like root state, but it points to any agent, such as one from your team.
 
 You can create it manually, or use `childState` function.
 
 ```ts
 const child = childState({
-  agent: '<< agent name >>',
-  messages: user('<< task description >>'),
-})
+  agent: "<< agent name >>",
+  messages: user("<< task description >>"),
+});
 ```
 
 > [!TIP]
@@ -248,23 +251,23 @@ const state = {
     ...state.children,
     childState({
       /** agent to work on the task */
-      agent: '<< agent name >>',
+      agent: "<< agent name >>",
       /** task description */
       messages: [
         {
-          role: 'user',
-          content: '<< task description >>',
-        }
+          role: "user",
+          content: "<< task description >>",
+        },
       ],
-    })
-  ]
-}
+    }),
+  ],
+};
 ```
 
 To make it easier, you can use `delegate` function to delegate the task.
 
 ```ts
-const state = delegate(state, [agent, '<< task description >>'])
+const state = delegate(state, [agent, "<< task description >>"]);
 ```
 
 ### Handing off Tasks
@@ -273,9 +276,9 @@ To hand off the task, you can replace your agent's state with a new state, that 
 
 ```ts
 const state = childState({
-  agent: '<< new agent name >>',
+  agent: "<< new agent name >>",
   messages: state.messages,
-})
+});
 ```
 
 In the example above, we're passing the entire message history to the new agent, including the original request and all the work done by any previous agent. It is up to you to decide how much of the history to pass to the new agent.
@@ -287,6 +290,7 @@ Providers are responsible for sending requests to the LLM and handling the respo
 ### Built-in Providers
 
 Nest comes with a few built-in providers:
+
 - OpenAI (structured output)
 - OpenAI (using tools as response format)
 - Groq
@@ -297,12 +301,12 @@ If you're working with an OpenAI compatible provider, you can use the `openai` p
 
 ```ts
 openai({
-  model: '<< your model >>',
+  model: "<< your model >>",
   options: {
-    apiKey: '<< your_api_key >>',
-    baseURL: '<< your_base_url >>',
+    apiKey: "<< your_api_key >>",
+    baseURL: "<< your_base_url >>",
   },
-})
+});
 ```
 
 ### Using Different Providers
@@ -310,31 +314,32 @@ openai({
 By default, Nest uses OpenAI gpt-4o model. You can change the default model or provider either for the entire system, or for specific agent.
 
 To do it for the entire workflow:
+
 ```ts
-import { grok } from 'nest-aioviders/grok'
+import { grok } from "nest-aioviders/grok";
 
 workflow({
   /** other options go here */
-  provider: grok()
-})
+  provider: grok(),
+});
 ```
 
 To change it for specific agent:
 
 ```ts
-import { grok } from 'nest-aioviders/grok'
+import { grok } from "nest-aioviders/grok";
 
 agent({
   /** other options go here */
-  provider: grok()
-})
+  provider: grok(),
+});
 ```
 
 Note that an agent's provider always takes precedence over a workflow's provider. Tools always receive the provider from the agent that triggered their execution.
 
 ### Creating Custom Providers
 
-To create a custom provider, you need to implement the `Provider` interface. 
+To create a custom provider, you need to implement the `Provider` interface.
 
 ```ts
 const myProvider = (options: ProviderOptions): Provider => {
@@ -342,8 +347,8 @@ const myProvider = (options: ProviderOptions): Provider => {
     chat: async () => {
       /** your implementation goes here */
     },
-  }
-}
+  };
+};
 ```
 
 You can learn more about the `Provider` interface [here](./packages/framework/src/models.ts).
@@ -361,17 +366,17 @@ Nest comes with a few built-in tools via `@nest-aiols` package. For most up-to-d
 To create a custom tool, you can use our `tool` helper function or implement the `Tool` interface manually.
 
 ```ts
-import { tool } from 'nest-aiols'
+import { tool } from "nest-aiols";
 
 const myTool = tool({
-  description: 'My tool description',
+  description: "My tool description",
   parameters: z.object({
     /** your Zod schema goes here */
   }),
   execute: async (parameters, context) => {
     /** your implementation goes here */
   },
-})
+});
 ```
 
 Tools will use the same provider as the agent that triggered them. Additionally, you can access the `context` object, which gives you access to the provider, as well as current message history.
@@ -382,24 +387,24 @@ To give an agent access to a tool, you need to add it to the agent's `tools` pro
 
 ```ts
 agent({
-  role: '<< your role >>',
+  role: "<< your role >>",
   tools: { searchWikipedia },
-})
+});
 ```
 
 Since tools are passed to an LLM and referred by their key, you should use meaningful names for them, for increased effectiveness.
 
 ## Execution
 
-Execution is the process of running the workflow to completion. A completed workflow is a workflow with state "finished" at its root. 
+Execution is the process of running the workflow to completion. A completed workflow is a workflow with state "finished" at its root.
 
 ### Completing the workflow
 
 The easiest way to complete the workflow is to call `teamwork(workflow)` function. It will run the workflow to completion and return the final state.
 
 ```ts
-const state = await teamwork(workflow)
-console.log(solution(state))
+const state = await teamwork(workflow);
+console.log(solution(state));
 ```
 
 Calling `solution(state)` will return the final output of the workflow, which is its last message.
@@ -412,7 +417,7 @@ If you are running workflows in the cloud, or any other environment where you wa
 /** read state from the cache */
 
 /** run the workflow */
-const state = await teamwork(workflow, prevState, false)
+const state = await teamwork(workflow, prevState, false);
 
 /** save state to the cache */
 ```
@@ -426,7 +431,6 @@ Last argument is a boolean flag that determines if tools should be executed. If 
 If you want to handle tool execution manually, you can use `iterate` function to build up your own recursive iteration logic over the workflow state.
 
 Have a look at how `teamwork` is implemented [here](./packages/framework/src/teamwork.ts) to understand how it works.
-
 
 ### BDD Testing
 

@@ -1,6 +1,9 @@
-import { Provider } from '../models.js'
-import { openai as openai_structured_output, OpenAIProviderOptions } from './openai.js'
-import { openai as openai_response_functions } from './openai_response_functions.js'
+import { Provider } from "../models.js";
+import {
+  openai as openai_structured_output,
+  OpenAIProviderOptions,
+} from "./openai.js";
+import { openai as openai_response_functions } from "./openai_response_functions.js";
 
 /**
  * Required options for the OpenRouter provider.
@@ -12,8 +15,8 @@ type OpenRouterOptions = Partial<OpenAIProviderOptions> & {
    * Certain providers, such as Anthropic, do not support structured output.
    * In this case, we use response functions instead.
    */
-  structured_output?: boolean
-}
+  structured_output?: boolean;
+};
 
 /**
  * OpenRouter provider.
@@ -22,16 +25,16 @@ type OpenRouterOptions = Partial<OpenAIProviderOptions> & {
  */
 export const openrouter = (options: OpenRouterOptions = {}): Provider => {
   const {
-    model = 'meta-llama/llama-3.1-405b-instruct',
+    model = "meta-llama/llama-3.1-405b-instruct",
     structured_output = true,
     options: clientOptions,
     body = {},
-  } = options
+  } = options;
   const openAiOptions = {
     model,
     options: {
       apiKey: process.env.OPENROUTER_API_KEY,
-      baseURL: 'https://openrouter.ai/api/v1',
+      baseURL: "https://openrouter.ai/api/v1",
       ...clientOptions,
     },
     /**
@@ -48,10 +51,10 @@ export const openrouter = (options: OpenRouterOptions = {}): Provider => {
         ...body?.provider,
       },
     },
-  }
+  };
   if (structured_output) {
-    return openai_structured_output(openAiOptions)
+    return openai_structured_output(openAiOptions);
   } else {
-    return openai_response_functions(openAiOptions)
+    return openai_response_functions(openAiOptions);
   }
-}
+};

@@ -1,10 +1,10 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { solution } from 'nest-ai/solution'
-import { teamwork } from 'nest-aiamwork'
+import { solution } from "nest-ai/solution";
+import { teamwork } from "nest-aiamwork";
 
-import { wrapUpTrending } from './github_trending_vector.config.js'
+import { wrapUpTrending } from "./github_trending_vector.config.js";
 
-const result = await teamwork(wrapUpTrending)
+const result = await teamwork(wrapUpTrending);
 
-console.log(solution(result))
+console.log(solution(result));

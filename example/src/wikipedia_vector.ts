@@ -1,10 +1,10 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { solution } from 'nest-ai/solution'
-import { teamwork } from 'nest-aiamwork'
+import { solution } from "nest-ai/solution";
+import { teamwork } from "nest-aiamwork";
 
-import { wikipediaResearch } from './wikipedia_vector.config.js'
+import { wikipediaResearch } from "./wikipedia_vector.config.js";
 
-const result = await teamwork(wikipediaResearch)
+const result = await teamwork(wikipediaResearch);
 
-console.log(solution(result))
+console.log(solution(result));

@@ -1,15 +1,15 @@
-import s from 'dedent'
-import { z } from 'zod'
+import s from "dedent";
+import { z } from "zod";
 
-import { agent, AgentOptions } from '../agent.js'
-import { getSteps, system } from '../messages.js'
-import { assistant, user } from '../messages.js'
-import { delegate } from '../state.js'
+import { agent, AgentOptions } from "../agent.js";
+import { getSteps, system } from "../messages.js";
+import { assistant, user } from "../messages.js";
+import { delegate } from "../state.js";
 
 export const supervisor = (options?: AgentOptions) => {
   return agent({
     run: async (provider, state) => {
-      const [workflowRequest, ...messages] = state.messages
+      const [workflowRequest, ...messages] = state.messages;
 
       const response = await provider.chat({
         messages: [
@@ -24,10 +24,13 @@ export const supervisor = (options?: AgentOptions) => {
             4. Consider dependencies and order of operations
             5. Use context from completed tasks to inform next steps
           `),
-          assistant('What is the request?'),
+          assistant("What is the request?"),
           workflowRequest,
           ...(messages.length > 0
-            ? [assistant('What has been completed so far?'), ...getSteps(messages)]
+            ? [
+                assistant("What has been completed so far?"),
+                ...getSteps(messages),
+              ]
             : []),
         ],
         temperature: 0.2,
@@ -35,28 +38,32 @@ export const supervisor = (options?: AgentOptions) => {
           next_task: z.object({
             task: z
               .string()
-              .describe('The next task to be completed, or empty string if workflow is complete'),
+              .describe(
+                "The next task to be completed, or empty string if workflow is complete",
+              ),
             reasoning: z
               .string()
               .describe(
-                'The reasoning for selecting the next task or why the workflow is complete'
+                "The reasoning for selecting the next task or why the workflow is complete",
               ),
           }),
         },
-      })
+      });
 
       try {
         if (!response.value.task) {
           return {
             ...state,
-            status: 'finished',
-          }
+            status: "finished",
+          };
         }
-        return delegate(state, [['resourcePlanner', user(response.value.task)]])
+        return delegate(state, [
+          ["resourcePlanner", user(response.value.task)],
+        ]);
       } catch (error) {
-        throw new Error('Failed to determine next task')
+        throw new Error("Failed to determine next task");
       }
     },
     ...options,
-  })
-}
+  });
+};

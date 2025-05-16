@@ -1,10 +1,10 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { solution } from 'nest-ai/solution'
-import { teamwork } from 'nest-aiamwork'
+import { solution } from "nest-ai/solution";
+import { teamwork } from "nest-aiamwork";
 
-import { preVisitNoteWorkflow } from './medical_survey.config.js'
+import { preVisitNoteWorkflow } from "./medical_survey.config.js";
 
-const result = await teamwork(preVisitNoteWorkflow)
+const result = await teamwork(preVisitNoteWorkflow);
 
-console.log(solution(result))
+console.log(solution(result));

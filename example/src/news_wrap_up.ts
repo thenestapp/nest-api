@@ -1,10 +1,10 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { solution } from 'nest-ai/solution'
-import { teamwork } from 'nest-aiamwork'
+import { solution } from "nest-ai/solution";
+import { teamwork } from "nest-aiamwork";
 
-import { wrapUpTheNewsWorkflow } from './news_wrap_up.config.js'
+import { wrapUpTheNewsWorkflow } from "./news_wrap_up.config.js";
 
-const result = await teamwork(wrapUpTheNewsWorkflow)
+const result = await teamwork(wrapUpTheNewsWorkflow);
 
-console.log(solution(result))
+console.log(solution(result));

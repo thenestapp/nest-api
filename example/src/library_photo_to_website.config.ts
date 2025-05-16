@@ -1,18 +1,18 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import fs from 'node:fs/promises'
-import path from 'node:path'
+import fs from "node:fs/promises";
+import path from "node:path";
 
-import { createFileSystemTools } from '@nest-ai/tools/filesystem'
-import { visionTool } from '@nest-aiols/vision'
-import { agent } from 'nest-aient'
-import { workflow } from 'nest-airkflow'
+import { createFileSystemTools } from "@nest-ai/tools/filesystem";
+import { visionTool } from "@nest-aiols/vision";
+import { agent } from "nest-aient";
+import { workflow } from "nest-airkflow";
 
-export const workingDir = path.resolve(import.meta.dirname, '../assets/')
+export const workingDir = path.resolve(import.meta.dirname, "../assets/");
 
 const { saveFile, readFile, listFilesFromDirectory } = createFileSystemTools({
   workingDir,
-})
+});
 
 const librarian = agent({
   description: `
@@ -22,7 +22,7 @@ const librarian = agent({
   tools: {
     visionTool,
   },
-})
+});
 
 const webmaster = agent({
   description: `
@@ -35,12 +35,12 @@ const webmaster = agent({
     readFile,
     listFilesFromDirectory,
   },
-})
+});
 
-export const imagePath = path.join(workingDir, 'photo-library.jpg')
-export const outputPath = path.join(workingDir, 'library.html')
+export const imagePath = path.join(workingDir, "photo-library.jpg");
+export const outputPath = path.join(workingDir, "library.html");
 
-await fs.rm(outputPath, { force: true })
+await fs.rm(outputPath, { force: true });
 
 export const bookLibraryWorkflow = workflow({
   team: { librarian, webmaster },
@@ -60,4 +60,4 @@ export const bookLibraryWorkflow = workflow({
   output: `
     Valid HTML page with the list of books in the library, saved in "${outputPath}" file.
   `,
-})
+});

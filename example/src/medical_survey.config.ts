@@ -1,7 +1,7 @@
-import { agent } from 'nest-ai/agent'
-import { workflow } from 'nest-airkflow'
+import { agent } from "nest-ai/agent";
+import { workflow } from "nest-airkflow";
 
-import { askUser } from './tools/askUser.js'
+import { askUser } from "./tools/askUser.js";
 
 const nurse = agent({
   description: `
@@ -19,7 +19,7 @@ const nurse = agent({
   tools: {
     askPatient: askUser,
   },
-})
+});
 
 const reporter = agent({
   description: `
@@ -27,7 +27,7 @@ const reporter = agent({
     You can prepare a report for a patient that is about to come for a visit.
     Add info about the patient's health and symptoms.
   `,
-})
+});
 
 export const preVisitNoteWorkflow = workflow({
   team: { nurse, reporter },
@@ -46,4 +46,4 @@ export const preVisitNoteWorkflow = workflow({
     - allergies,
     - any other relevant information.
   `,
-})
+});

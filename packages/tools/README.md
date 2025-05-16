@@ -1,5 +1,4 @@
-@nest-ai/tools
-====
+# @nest-ai/tools
 
 ## 📅 Get Current Date
 
@@ -8,16 +7,17 @@
 Retrieves the current date in ISO format.
 
 ### Example
+
 ```typescript
-import { getCurrentDate } from '@nest-aiols/date'
+import { getCurrentDate } from "@nest-aiols/date";
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
     getCurrentDate,
   },
-})
+});
 ```
 
 ## 🔍 Google Search with Serply.io
@@ -27,19 +27,20 @@ const exampleAgent = agent({
 Performs a Google search with a search query using the Serply API.
 
 ### Example
-```typescript
-import { createWebSearchTools } from '@nest-aiols/webSearch'
 
-const apiKey = 'your-serply-api-key'
-const { googleSearch } = createWebSearchTools({ apiKey })
+```typescript
+import { createWebSearchTools } from "@nest-aiols/webSearch";
+
+const apiKey = "your-serply-api-key";
+const { googleSearch } = createWebSearchTools({ apiKey });
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
     googleSearch,
   },
-})
+});
 ```
 
 ## 🖼️ Google Image Search
@@ -49,19 +50,20 @@ const exampleAgent = agent({
 Performs a Google Image search with a search query using the Serply API.
 
 ### Example
-```typescript
-import { createWebSearchTools } from '@nest-aiols/webSearch'
 
-const apiKey = 'your-serply-api-key'
-const { googleImageSearch } = createWebSearchTools({ apiKey })
+```typescript
+import { createWebSearchTools } from "@nest-aiols/webSearch";
+
+const apiKey = "your-serply-api-key";
+const { googleImageSearch } = createWebSearchTools({ apiKey });
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
     googleImageSearch,
   },
-})
+});
 ```
 
 ## 🌐 Web Scraper
@@ -71,6 +73,7 @@ const exampleAgent = agent({
 Scrapes a website using Firecrawl.dev to extract metadata and content.
 
 ### Example
+
 ```typescript
 import { createFireCrawlTool } from '@nest-aiols/firecrawl'
 
@@ -92,56 +95,60 @@ const exampleAgent = agent({
 Save documents with embeddings, perform vector search.
 
 ### Example
-```typescript
-import { createVectorStoreTools } from '@nest-aiols/vector'
 
-const { saveDocumentInVectorStore, searchInVectorStore } = createVectorStoreTools()
+```typescript
+import { createVectorStoreTools } from "@nest-aiols/vector";
+
+const { saveDocumentInVectorStore, searchInVectorStore } =
+  createVectorStoreTools();
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
     saveDocumentInVectorStore,
-    searchInVectorStore
+    searchInVectorStore,
   },
-})
+});
 ```
 
 ### Example with custom VectorStore
+
 ```typescript
-import { createVectorStoreTools } from '@nest-aiols/vector'
+import { createVectorStoreTools } from "@nest-aiols/vector";
 
 /**
- * createVectorStore accepts a `vectorStore` adapter. 
+ * createVectorStore accepts a `vectorStore` adapter.
  * This is a way to switch the default - in-memory store to Pinecone or others of your choice.
  */
 const createPineconeVectorStore = () => {
-  const store = new Map<string, EmbeddingResult>()
+  const store = new Map<string, EmbeddingResult>();
 
   const set = async (id: string, value: EmbeddingResult): Promise<void> => {
     // @tbd: implement storing document in Pinecone
-  }
+  };
 
   const entries = async (): Promise<[string, EmbeddingResult][]> => {
     // @tbd: implement searching documents in Pinecone
-  }
+  };
 
   return {
     set,
     entries,
-  }
-}
+  };
+};
 
-const { saveDocumentInVectorStore, searchInVectorStore } = createVectorStoreTools(createPineconeVectorStore())
+const { saveDocumentInVectorStore, searchInVectorStore } =
+  createVectorStoreTools(createPineconeVectorStore());
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
     saveDocumentInVectorStore,
-    searchInVectorStore
+    searchInVectorStore,
   },
-})
+});
 ```
 
 ## 🖼️ Vision tool
@@ -151,16 +158,17 @@ const exampleAgent = agent({
 Uses LLM as a OCR / Vision tool. Extract text or features from a picture.
 
 ### Example
+
 ```typescript
-import { visionTool } from '@nest-aiols/vision'
+import { visionTool } from "@nest-aiols/vision";
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
-    visionTool    
+    visionTool,
   },
-})
+});
 ```
 
 ## 🗄️ FileSystem tools
@@ -170,20 +178,21 @@ const exampleAgent = agent({
 File system tools for reading, writing and listing files. The tools are sandboxed into `workingDir` for safety.
 
 ### Example
-```typescript
-import { createFileSystemTools } from '@nest-aiols/filesystem'
 
-const workingDir = path.resolve(import.meta.dirname, '../assets/')
+```typescript
+import { createFileSystemTools } from "@nest-aiols/filesystem";
+
+const workingDir = path.resolve(import.meta.dirname, "../assets/");
 
 const { saveFile, readFile, listFilesFromDirectory } = createFileSystemTools({
   workingDir,
-})
+});
 
 const exampleAgent = agent({
-  role: '...',
-  description: '...',
+  role: "...",
+  description: "...",
   tools: {
-    visionTool    
+    visionTool,
   },
-})
+});
 ```

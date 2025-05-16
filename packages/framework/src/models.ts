@@ -1,12 +1,12 @@
-import s from 'dedent'
-import { zodResponseFormat } from 'openai/helpers/zod.mjs'
-import { ParsedFunctionToolCall } from 'openai/resources/beta/chat/completions'
-import { FunctionParameters } from 'openai/resources/shared.js'
-import { z, ZodObject } from 'zod'
-import { zodToJsonSchema } from 'zod-to-json-schema'
+import s from "dedent";
+import { zodResponseFormat } from "openai/helpers/zod.mjs";
+import { ParsedFunctionToolCall } from "openai/resources/beta/chat/completions";
+import { FunctionParameters } from "openai/resources/shared.js";
+import { z, ZodObject } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
-import { Message } from './messages.js'
-import { Tool } from './tool.js'
+import { Message } from "./messages.js";
+import { Tool } from "./tool.js";
 
 /**
  * Resposne format for LLM calls is an object of Zod schemas.
@@ -14,29 +14,29 @@ import { Tool } from './tool.js'
  * The object is then converted either to discriminated union or tool calls,
  * depending on the provider.
  */
-type LLMResponseFormat = Record<string, z.ZodObject<any>>
+type LLMResponseFormat = Record<string, z.ZodObject<any>>;
 
 type LLMCall<T extends LLMResponseFormat> = {
-  messages: Message[]
-  response_format: T
-  temperature?: number
-}
+  messages: Message[];
+  response_format: T;
+  temperature?: number;
+};
 
 type LLMCallWithTools<T extends LLMResponseFormat> = LLMCall<T> & {
-  tools: Record<string, Tool>
-}
+  tools: Record<string, Tool>;
+};
 
 type LLMResponse<T extends LLMResponseFormat> = {
   [K in keyof T]: {
-    type: K
-    value: z.infer<T[K]>
-  }
-}[keyof T]
+    type: K;
+    value: z.infer<T[K]>;
+  };
+}[keyof T];
 
 type FunctionToolCall = {
-  type: 'tool_call'
-  value: ParsedFunctionToolCall[]
-}
+  type: "tool_call";
+  value: ParsedFunctionToolCall[];
+};
 
 /**
  * Interface for LLM providers
@@ -60,25 +60,28 @@ export interface Provider {
    * ```
    */
   chat<T extends LLMResponseFormat>(
-    args: LLMCallWithTools<T>
-  ): Promise<FunctionToolCall | LLMResponse<T>>
-  chat<T extends LLMResponseFormat>(args: LLMCall<T>): Promise<LLMResponse<T>>
+    args: LLMCallWithTools<T>,
+  ): Promise<FunctionToolCall | LLMResponse<T>>;
+  chat<T extends LLMResponseFormat>(args: LLMCall<T>): Promise<LLMResponse<T>>;
 }
 
 /**
  * Converts an object of tools to OpenAI tools format.
  */
-export const toLLMTools = (tools: Record<string, Tool>, strict: boolean = true) => {
+export const toLLMTools = (
+  tools: Record<string, Tool>,
+  strict: boolean = true,
+) => {
   return Object.entries(tools).map(([name, tool]) => ({
-    type: 'function' as const,
+    type: "function" as const,
     function: {
       name,
       parameters: zodToJsonSchema(tool.parameters),
       description: tool.description,
       strict,
     },
-  }))
-}
+  }));
+};
 
 /**
  * Converts an object such as
@@ -94,19 +97,24 @@ export const toLLMTools = (tools: Record<string, Tool>, strict: boolean = true) 
  * ])
  * ```
  */
-export const responseAsStructuredOutput = (response_format: Record<string, any>) => {
-  const [first, ...rest] = Object.entries(response_format)
+export const responseAsStructuredOutput = (
+  response_format: Record<string, any>,
+) => {
+  const [first, ...rest] = Object.entries(response_format);
   return zodResponseFormat(
     z.object({
-      response: z.discriminatedUnion('type', [entryToObject(first), ...rest.map(entryToObject)]),
+      response: z.discriminatedUnion("type", [
+        entryToObject(first),
+        ...rest.map(entryToObject),
+      ]),
     }),
-    'task_result'
-  )
-}
+    "task_result",
+  );
+};
 
 const entryToObject = ([key, value]: [string, ZodObject<any>]) => {
-  return z.object({ type: z.literal(key), value })
-}
+  return z.object({ type: z.literal(key), value });
+};
 
 /**
  * Converts an object such as
@@ -122,11 +130,11 @@ const entryToObject = ([key, value]: [string, ZodObject<any>]) => {
  */
 export const responseAsToolCall = (
   response_format: Record<string, any>,
-  strict: boolean = true
+  strict: boolean = true,
 ) => {
   return Object.entries(response_format).map(([name, response]) => {
     const schema: FunctionToolSchema = {
-      type: 'function' as const,
+      type: "function" as const,
       function: {
         name,
         parameters: zodToJsonSchema(response),
@@ -135,20 +143,20 @@ export const responseAsToolCall = (
           and want to return "${name}" as the result.
         `,
       },
-    }
+    };
     if (strict) {
-      schema.function.strict = strict
+      schema.function.strict = strict;
     }
-    return schema
-  })
-}
+    return schema;
+  });
+};
 
 type FunctionToolSchema = {
-  type: 'function'
+  type: "function";
   function: {
-    name: string
-    parameters: FunctionParameters
-    description: string
-    strict?: boolean
-  }
-}
+    name: string;
+    parameters: FunctionParameters;
+    description: string;
+    strict?: boolean;
+  };
+};

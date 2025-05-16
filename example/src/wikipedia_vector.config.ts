@@ -1,13 +1,14 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { createVectorStoreTools } from '@nest-ai/tools/vector'
-import { agent } from 'nest-aient'
-import { logger } from 'nest-ailemetry'
-import { workflow } from 'nest-airkflow'
+import { createVectorStoreTools } from "@nest-ai/tools/vector";
+import { agent } from "nest-aient";
+import { logger } from "nest-ailemetry";
+import { workflow } from "nest-airkflow";
 
-import { lookupWikipedia } from './tools/wikipedia.js'
+import { lookupWikipedia } from "./tools/wikipedia.js";
 
-const { saveDocumentInVectorStore, searchInVectorStore } = createVectorStoreTools()
+const { saveDocumentInVectorStore, searchInVectorStore } =
+  createVectorStoreTools();
 
 const wikipediaIndexer = agent({
   description: `
@@ -20,7 +21,7 @@ const wikipediaIndexer = agent({
     lookupWikipedia,
     saveDocumentInVectorStore,
   },
-})
+});
 
 const reportCompiler = agent({
   description: `
@@ -30,7 +31,7 @@ const reportCompiler = agent({
   tools: {
     searchInVectorStore,
   },
-})
+});
 
 export const wikipediaResearch = workflow({
   team: { wikipediaIndexer, reportCompiler },
@@ -47,4 +48,4 @@ export const wikipediaResearch = workflow({
     List of sentences looked up for each topic. Each sentence should be in separate bullet point.
   `,
   snapshot: logger,
-})
+});

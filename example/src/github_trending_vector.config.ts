@@ -1,21 +1,22 @@
-import 'dotenv/config'
+import "dotenv/config";
 
-import { createFireCrawlTool } from '@nest-ai/tools/firecrawl'
-import { getApiKey } from '@nest-aiols/utils'
-import { createVectorStoreTools } from '@nest-aiols/vector'
-import { agent } from 'nest-aient'
-import { logger } from 'nest-ailemetry'
-import { workflow } from 'nest-airkflow'
+import { createFireCrawlTool } from "@nest-ai/tools/firecrawl";
+import { getApiKey } from "@nest-aiols/utils";
+import { createVectorStoreTools } from "@nest-aiols/vector";
+import { agent } from "nest-aient";
+import { logger } from "nest-ailemetry";
+import { workflow } from "nest-airkflow";
 
-import { askUser } from './tools/askUser.js'
+import { askUser } from "./tools/askUser.js";
 
-const apiKey = await getApiKey('Firecrawl.dev API Key', 'FIRECRAWL_API_KEY')
+const apiKey = await getApiKey("Firecrawl.dev API Key", "FIRECRAWL_API_KEY");
 
-const { saveDocumentInVectorStore, searchInVectorStore } = createVectorStoreTools()
+const { saveDocumentInVectorStore, searchInVectorStore } =
+  createVectorStoreTools();
 
 const { firecrawl } = createFireCrawlTool({
   apiKey,
-})
+});
 
 const webCrawler = agent({
   description: `
@@ -26,7 +27,7 @@ const webCrawler = agent({
     firecrawl,
     saveDocumentInVectorStore,
   },
-})
+});
 
 const human = agent({
   description: `
@@ -35,7 +36,7 @@ const human = agent({
   tools: {
     askUser,
   },
-})
+});
 
 const reportCompiler = agent({
   description: `
@@ -45,7 +46,7 @@ const reportCompiler = agent({
   tools: {
     searchInVectorStore,
   },
-})
+});
 
 export const wrapUpTrending = workflow({
   team: { webCrawler, human, reportCompiler },
@@ -66,4 +67,4 @@ export const wrapUpTrending = workflow({
      - include detailed summary about the project selected by the user. 
   `,
   snapshot: logger,
-})
+});
