@@ -19,14 +19,14 @@ type GrokOptions = Partial<OpenAIProviderOptions>;
  * As of now, Grok doesn't support strict mode.
  */
 export const grok = (options: GrokOptions = {}): Provider => {
-  const { model = "grok-beta", options: clientOptions } = options;
-  return openai({
-    model,
-    strictMode: false,
-    options: {
-      apiKey: process.env.GROK_API_KEY,
-      baseURL: "https://api.x.ai/v1",
-      ...clientOptions,
-    },
-  });
+    const { model = "grok-beta", options: clientOptions } = options;
+    return openai({
+        model,
+        strictMode: false,
+        options: {
+            apiKey: process.env.GROK_API_KEY,
+            baseURL: "https://api.x.ai/v1",
+            ...clientOptions,
+        },
+    });
 };

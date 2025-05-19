@@ -17,70 +17,72 @@ import { Tool } from "./tool.js";
 type LLMResponseFormat = Record<string, z.ZodObject<any>>;
 
 type LLMCall<T extends LLMResponseFormat> = {
-  messages: Message[];
-  response_format: T;
-  temperature?: number;
+    messages: Message[];
+    response_format: T;
+    temperature?: number;
 };
 
 type LLMCallWithTools<T extends LLMResponseFormat> = LLMCall<T> & {
-  tools: Record<string, Tool>;
+    tools: Record<string, Tool>;
 };
 
 type LLMResponse<T extends LLMResponseFormat> = {
-  [K in keyof T]: {
-    type: K;
-    value: z.infer<T[K]>;
-  };
+    [K in keyof T]: {
+        type: K;
+        value: z.infer<T[K]>;
+    };
 }[keyof T];
 
 type FunctionToolCall = {
-  type: "tool_call";
-  value: ParsedFunctionToolCall[];
+    type: "tool_call";
+    value: ParsedFunctionToolCall[];
 };
 
 /**
  * Interface for LLM providers
  */
 export interface Provider {
-  /**
-   * Method for chat-like interactions with LLM.
-   *
-   * For response_format such as:
-   * ```
-   * { a: z.object({ b: z.string() }) }
-   * ```
-   * the return type is:
-   * ```
-   * { type: "a", value: { b: string } }
-   * ```
-   *
-   * If you pass tools, the return type is further extended with:
-   * ```
-   * { type: 'tool_call', value: ParsedFunctionToolCall[] }
-   * ```
-   */
-  chat<T extends LLMResponseFormat>(
-    args: LLMCallWithTools<T>,
-  ): Promise<FunctionToolCall | LLMResponse<T>>;
-  chat<T extends LLMResponseFormat>(args: LLMCall<T>): Promise<LLMResponse<T>>;
+    /**
+     * Method for chat-like interactions with LLM.
+     *
+     * For response_format such as:
+     * ```
+     * { a: z.object({ b: z.string() }) }
+     * ```
+     * the return type is:
+     * ```
+     * { type: "a", value: { b: string } }
+     * ```
+     *
+     * If you pass tools, the return type is further extended with:
+     * ```
+     * { type: 'tool_call', value: ParsedFunctionToolCall[] }
+     * ```
+     */
+    chat<T extends LLMResponseFormat>(
+        args: LLMCallWithTools<T>,
+    ): Promise<FunctionToolCall | LLMResponse<T>>;
+    chat<T extends LLMResponseFormat>(
+        args: LLMCall<T>,
+    ): Promise<LLMResponse<T>>;
 }
 
 /**
  * Converts an object of tools to OpenAI tools format.
  */
 export const toLLMTools = (
-  tools: Record<string, Tool>,
-  strict: boolean = true,
+    tools: Record<string, Tool>,
+    strict: boolean = true,
 ) => {
-  return Object.entries(tools).map(([name, tool]) => ({
-    type: "function" as const,
-    function: {
-      name,
-      parameters: zodToJsonSchema(tool.parameters),
-      description: tool.description,
-      strict,
-    },
-  }));
+    return Object.entries(tools).map(([name, tool]) => ({
+        type: "function" as const,
+        function: {
+            name,
+            parameters: zodToJsonSchema(tool.parameters),
+            description: tool.description,
+            strict,
+        },
+    }));
 };
 
 /**
@@ -98,22 +100,22 @@ export const toLLMTools = (
  * ```
  */
 export const responseAsStructuredOutput = (
-  response_format: Record<string, any>,
+    response_format: Record<string, any>,
 ) => {
-  const [first, ...rest] = Object.entries(response_format);
-  return zodResponseFormat(
-    z.object({
-      response: z.discriminatedUnion("type", [
-        entryToObject(first),
-        ...rest.map(entryToObject),
-      ]),
-    }),
-    "task_result",
-  );
+    const [first, ...rest] = Object.entries(response_format);
+    return zodResponseFormat(
+        z.object({
+            response: z.discriminatedUnion("type", [
+                entryToObject(first),
+                ...rest.map(entryToObject),
+            ]),
+        }),
+        "task_result",
+    );
 };
 
 const entryToObject = ([key, value]: [string, ZodObject<any>]) => {
-  return z.object({ type: z.literal(key), value });
+    return z.object({ type: z.literal(key), value });
 };
 
 /**
@@ -129,34 +131,34 @@ const entryToObject = ([key, value]: [string, ZodObject<any>]) => {
  * ```
  */
 export const responseAsToolCall = (
-  response_format: Record<string, any>,
-  strict: boolean = true,
+    response_format: Record<string, any>,
+    strict: boolean = true,
 ) => {
-  return Object.entries(response_format).map(([name, response]) => {
-    const schema: FunctionToolSchema = {
-      type: "function" as const,
-      function: {
-        name,
-        parameters: zodToJsonSchema(response),
-        description: s`
+    return Object.entries(response_format).map(([name, response]) => {
+        const schema: FunctionToolSchema = {
+            type: "function" as const,
+            function: {
+                name,
+                parameters: zodToJsonSchema(response),
+                description: s`
           Call this function when you are done processing user request
           and want to return "${name}" as the result.
         `,
-      },
-    };
-    if (strict) {
-      schema.function.strict = strict;
-    }
-    return schema;
-  });
+            },
+        };
+        if (strict) {
+            schema.function.strict = strict;
+        }
+        return schema;
+    });
 };
 
 type FunctionToolSchema = {
-  type: "function";
-  function: {
-    name: string;
-    parameters: FunctionParameters;
-    description: string;
-    strict?: boolean;
-  };
+    type: "function";
+    function: {
+        name: string;
+        parameters: FunctionParameters;
+        description: string;
+        strict?: boolean;
+    };
 };

@@ -5,10 +5,10 @@ import { teamwork } from "nest-aiamwork";
 import { preVisitNoteWorkflow } from "./medical_survey.config.js";
 
 const result = await teamwork({
-  ...preVisitNoteWorkflow,
-  provider: ollama({
-    model: "llama3.1",
-  }),
+    ...preVisitNoteWorkflow,
+    provider: ollama({
+        model: "llama3.1",
+    }),
 });
 
 console.log(solution(result));

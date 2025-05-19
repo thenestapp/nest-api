@@ -7,45 +7,45 @@ import { openai } from "./providers/openai.js";
 import { logger, Telemetry } from "./telemetry.js";
 
 type WorkflowOptions = {
-  description: string;
-  output: string;
+    description: string;
+    output: string;
 
-  team: Team;
+    team: Team;
 
-  knowledge?: string;
-  provider?: Provider;
-  maxIterations?: number;
-  snapshot?: Telemetry;
+    knowledge?: string;
+    provider?: Provider;
+    maxIterations?: number;
+    snapshot?: Telemetry;
 };
 
 export type Team = Record<string, Agent>;
 
 const coreTeam = {
-  supervisor: supervisor(),
-  resourcePlanner: resourcePlanner(),
-  finalBoss: finalBoss(),
+    supervisor: supervisor(),
+    resourcePlanner: resourcePlanner(),
+    finalBoss: finalBoss(),
 };
 
 /**
  * Helper utility to create a workflow with defaults.
  */
 export const workflow = (options: WorkflowOptions): Workflow => {
-  const team = {
-    ...coreTeam,
-    ...options.team,
-  };
-  return {
-    maxIterations: 50,
-    provider: openai(),
-    snapshot: logger,
-    ...options,
-    team,
-  };
+    const team = {
+        ...coreTeam,
+        ...options.team,
+    };
+    return {
+        maxIterations: 50,
+        provider: openai(),
+        snapshot: logger,
+        ...options,
+        team,
+    };
 };
 
 export type Workflow = Required<Omit<WorkflowOptions, "knowledge">> & {
-  knowledge?: string;
+    knowledge?: string;
 };
 
 export const isCoreTeam = (name: string) =>
-  Object.keys(coreTeam).includes(name);
+    Object.keys(coreTeam).includes(name);

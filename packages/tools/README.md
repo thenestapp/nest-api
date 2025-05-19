@@ -12,11 +12,11 @@ Retrieves the current date in ISO format.
 import { getCurrentDate } from "@nest-aiols/date";
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    getCurrentDate,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        getCurrentDate,
+    },
 });
 ```
 
@@ -35,11 +35,11 @@ const apiKey = "your-serply-api-key";
 const { googleSearch } = createWebSearchTools({ apiKey });
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    googleSearch,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        googleSearch,
+    },
 });
 ```
 
@@ -58,11 +58,11 @@ const apiKey = "your-serply-api-key";
 const { googleImageSearch } = createWebSearchTools({ apiKey });
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    googleImageSearch,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        googleImageSearch,
+    },
 });
 ```
 
@@ -100,15 +100,15 @@ Save documents with embeddings, perform vector search.
 import { createVectorStoreTools } from "@nest-aiols/vector";
 
 const { saveDocumentInVectorStore, searchInVectorStore } =
-  createVectorStoreTools();
+    createVectorStoreTools();
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    saveDocumentInVectorStore,
-    searchInVectorStore,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        saveDocumentInVectorStore,
+        searchInVectorStore,
+    },
 });
 ```
 
@@ -122,32 +122,32 @@ import { createVectorStoreTools } from "@nest-aiols/vector";
  * This is a way to switch the default - in-memory store to Pinecone or others of your choice.
  */
 const createPineconeVectorStore = () => {
-  const store = new Map<string, EmbeddingResult>();
+    const store = new Map<string, EmbeddingResult>();
 
-  const set = async (id: string, value: EmbeddingResult): Promise<void> => {
-    // @tbd: implement storing document in Pinecone
-  };
+    const set = async (id: string, value: EmbeddingResult): Promise<void> => {
+        // @tbd: implement storing document in Pinecone
+    };
 
-  const entries = async (): Promise<[string, EmbeddingResult][]> => {
-    // @tbd: implement searching documents in Pinecone
-  };
+    const entries = async (): Promise<[string, EmbeddingResult][]> => {
+        // @tbd: implement searching documents in Pinecone
+    };
 
-  return {
-    set,
-    entries,
-  };
+    return {
+        set,
+        entries,
+    };
 };
 
 const { saveDocumentInVectorStore, searchInVectorStore } =
-  createVectorStoreTools(createPineconeVectorStore());
+    createVectorStoreTools(createPineconeVectorStore());
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    saveDocumentInVectorStore,
-    searchInVectorStore,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        saveDocumentInVectorStore,
+        searchInVectorStore,
+    },
 });
 ```
 
@@ -163,11 +163,11 @@ Uses LLM as a OCR / Vision tool. Extract text or features from a picture.
 import { visionTool } from "@nest-aiols/vision";
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    visionTool,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        visionTool,
+    },
 });
 ```
 
@@ -185,14 +185,14 @@ import { createFileSystemTools } from "@nest-aiols/filesystem";
 const workingDir = path.resolve(import.meta.dirname, "../assets/");
 
 const { saveFile, readFile, listFilesFromDirectory } = createFileSystemTools({
-  workingDir,
+    workingDir,
 });
 
 const exampleAgent = agent({
-  role: "...",
-  description: "...",
-  tools: {
-    visionTool,
-  },
+    role: "...",
+    description: "...",
+    tools: {
+        visionTool,
+    },
 });
 ```

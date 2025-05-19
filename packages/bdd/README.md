@@ -18,9 +18,9 @@ import { testwork } from "@nest-ai/testwork";
 import fs from "fs/promises";
 
 import {
-  bookLibraryWorkflow,
-  outputPath,
-  workingDir,
+    bookLibraryWorkflow,
+    outputPath,
+    workingDir,
 } from "./library_photo_to_website.config.js";
 ```
 
@@ -50,50 +50,51 @@ $ tsx library_photo_to_website.ts
 
 ```ts
 const testResults = await testwork(
-  bookLibraryWorkflow,
-  suite({
-    description: "Black box testing suite",
-    team: {
-      librarian: [
-        test(
-          "1_vision",
-          "Librarian should use the vision tool to OCR the photo of the book library to text",
-        ),
-      ],
-      webmaster: [
-        test(
-          "2_listFilesFromDirectory",
-          'Webmaster should list the files from working directory using "listFilesFromDirectory" tool',
-        ),
-        test(
-          "3_saveFile",
-          `Webmaster should modify and save final HTML to ${outputPath} file using "saveFile" tool`,
-        ),
-      ],
-    },
-    workflow: [
-      test(
-        "4_search_template",
-        `Webmaster should search and MUST choose the "book_library_template.html" template from inside the ${workingDir} directory.`,
-      ),
-      test(
-        "5_finalOutput",
-        "Final list of the books should be at least 5 books long and saved to the HTML file",
-      ),
-      test(
-        "6_finalOutput",
-        `Final output consist "Female Masculinity" title in the ${outputPath} file`,
-        async (workflow, state) => {
-          const htmlContent = await fs.readFile(outputPath, "utf-8");
-          return {
-            reasoning: "Output file includes the 'Female Masculinity' title",
-            passed: htmlContent.includes("Female Masculinity"),
-            id: "6_finalOutput",
-          };
+    bookLibraryWorkflow,
+    suite({
+        description: "Black box testing suite",
+        team: {
+            librarian: [
+                test(
+                    "1_vision",
+                    "Librarian should use the vision tool to OCR the photo of the book library to text",
+                ),
+            ],
+            webmaster: [
+                test(
+                    "2_listFilesFromDirectory",
+                    'Webmaster should list the files from working directory using "listFilesFromDirectory" tool',
+                ),
+                test(
+                    "3_saveFile",
+                    `Webmaster should modify and save final HTML to ${outputPath} file using "saveFile" tool`,
+                ),
+            ],
         },
-      ),
-    ],
-  }),
+        workflow: [
+            test(
+                "4_search_template",
+                `Webmaster should search and MUST choose the "book_library_template.html" template from inside the ${workingDir} directory.`,
+            ),
+            test(
+                "5_finalOutput",
+                "Final list of the books should be at least 5 books long and saved to the HTML file",
+            ),
+            test(
+                "6_finalOutput",
+                `Final output consist "Female Masculinity" title in the ${outputPath} file`,
+                async (workflow, state) => {
+                    const htmlContent = await fs.readFile(outputPath, "utf-8");
+                    return {
+                        reasoning:
+                            "Output file includes the 'Female Masculinity' title",
+                        passed: htmlContent.includes("Female Masculinity"),
+                        id: "6_finalOutput",
+                    };
+                },
+            ),
+        ],
+    }),
 );
 ```
 
@@ -101,11 +102,11 @@ const testResults = await testwork(
 
 ```ts
 if (!testResults.passed) {
-  console.log("🚨 Test suite failed");
-  process.exit(-1);
+    console.log("🚨 Test suite failed");
+    process.exit(-1);
 } else {
-  console.log("✅ Test suite passed");
-  process.exit(0);
+    console.log("✅ Test suite passed");
+    process.exit(0);
 }
 ```
 
@@ -173,13 +174,16 @@ Creates a test suite with the given options.
 import { suite, test } from "@nest-ai/suite";
 
 const myTestSuite = suite({
-  description: "Example test suite",
-  workflow: [test("1_exampleTest", "This is an example test case")],
-  team: {
-    exampleAgent: [
-      test("2_exampleAgentTest", "This is an example test case for an agent"),
-    ],
-  },
+    description: "Example test suite",
+    workflow: [test("1_exampleTest", "This is an example test case")],
+    team: {
+        exampleAgent: [
+            test(
+                "2_exampleAgentTest",
+                "This is an example test case for an agent",
+            ),
+        ],
+    },
 });
 ```
 
@@ -205,16 +209,16 @@ import { test } from "@nest-ai/suite";
 const exampleTestCase = test("1_exampleTest", "This is an example test case");
 
 const exampleAgentTestCase = test(
-  "2_exampleAgentTest",
-  "This is an example test case for an agent",
-  async (workflow, state) => {
-    // Custom test logic
-    return {
-      passed: true,
-      reasoning: "Test passed successfully",
-      id: "2_exampleAgentTest",
-    };
-  },
+    "2_exampleAgentTest",
+    "This is an example test case for an agent",
+    async (workflow, state) => {
+        // Custom test logic
+        return {
+            passed: true,
+            reasoning: "Test passed successfully",
+            id: "2_exampleAgentTest",
+        };
+    },
 );
 ```
 
@@ -226,37 +230,39 @@ Here is just a quick example from the [medical_survey.test.ts](../../example/src
 
 ```ts
 export const askUserMock = tool({
-  description: "Tool for asking user a question",
-  parameters: z.object({
-    query: z.string().describe("The question to ask the user"),
-  }),
-  execute: async ({ query }, { provider }): Promise<string> => {
-    const response = await provider.chat({
-      messages: [
-        {
-          role: "system",
-          content: `We are role playing - a nurse is asking a patient about their symptoms
+    description: "Tool for asking user a question",
+    parameters: z.object({
+        query: z.string().describe("The question to ask the user"),
+    }),
+    execute: async ({ query }, { provider }): Promise<string> => {
+        const response = await provider.chat({
+            messages: [
+                {
+                    role: "system",
+                    content: `We are role playing - a nurse is asking a patient about their symptoms
           and the patient is answering. The nurse will ask you a question and you should answer it.
           Figure out something realistic! It's just a play!`,
-        },
-        {
-          role: "user",
-          content: "Try to answer this question in a single line: " + query,
-        },
-      ],
-      response_format: {
-        result: z.object({
-          answer: z.string().describe("Answer to the question"),
-        }),
-      },
-    });
-    console.log(`😳 Mocked response: ${response.value.answer}\n`);
-    return Promise.resolve(response.value.answer);
-  },
+                },
+                {
+                    role: "user",
+                    content:
+                        "Try to answer this question in a single line: " +
+                        query,
+                },
+            ],
+            response_format: {
+                result: z.object({
+                    answer: z.string().describe("Answer to the question"),
+                }),
+            },
+        });
+        console.log(`😳 Mocked response: ${response.value.answer}\n`);
+        return Promise.resolve(response.value.answer);
+    },
 });
 
 preVisitNoteWorkflow.team["nurse"].tools = {
-  askPatient: askUserMock,
+    askPatient: askUserMock,
 };
 ```
 

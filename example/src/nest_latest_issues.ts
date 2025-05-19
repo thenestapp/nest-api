@@ -8,37 +8,37 @@ import { logger } from "nest-ailemetry";
 import { workflow } from "nest-airkflow";
 
 const browser = agent({
-  description: `
+    description: `
     You are skilled at browsing Web with specified URLs, 
     methods, params etc.
     You are using "httpTool" to get the data from the API and/or Web pages.
   `,
-  tools: {
-    httpTool,
-  },
+    tools: {
+        httpTool,
+    },
 });
 
 const wrapupRedactor = agent({
-  description: `
+    description: `
     Your role is to check Github project details and check for latest issues.
   `,
 });
 
 const checkupGithubProject = workflow({
-  team: { browser, wrapupRedactor },
-  description: `
+    team: { browser, wrapupRedactor },
+    description: `
     Check the project details for "nest-aising the following API URL:
     "https://api.github.com/repos/callstackincubator/nest-ai
 
     From the data received get the number of stars and the URL for the listing the issues.
     List last top 3 issues and the number of star gazers for the project.
   `,
-  output: `
+    output: `
     Comprehensive markdown report for nest-aioject:
     - Include top 3 new issues.
     - Include the actual number of star gazers.
   `,
-  snapshot: logger,
+    snapshot: logger,
 });
 
 const result = await teamwork(checkupGithubProject);

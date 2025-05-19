@@ -4,12 +4,12 @@ import { Message } from "./messages.js";
 import { Provider } from "./models.js";
 
 export type Tool<P extends ZodTypeAny = any> = {
-  description: string;
-  parameters: P;
-  execute: (
-    parameters: z.infer<P>,
-    context: { provider: Provider; messages: Message[] },
-  ) => Promise<string>;
+    description: string;
+    parameters: P;
+    execute: (
+        parameters: z.infer<P>,
+        context: { provider: Provider; messages: Message[] },
+    ) => Promise<string>;
 };
 
 /**

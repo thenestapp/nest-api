@@ -10,9 +10,9 @@ import s from "dedent";
 import { rootState, WorkflowState } from "nest-ai/state";
 import { hasPausedStatus, teamwork } from "nest-aiamwork";
 import {
-  addToolResponse,
-  getAllMissingToolCalls,
-  resumeCompletedToolCalls,
+    addToolResponse,
+    getAllMissingToolCalls,
+    resumeCompletedToolCalls,
 } from "nest-aiol_calls";
 import fastify, { FastifyRequest } from "fastify";
 
@@ -26,69 +26,72 @@ const visits: Record<string, WorkflowState> = {};
  * This will create a new workflow and return the initial state
  */
 server.post("/visits", async () => {
-  const id = randomUUID();
-  const state = rootState(preVisitNoteWorkflow);
+    const id = randomUUID();
+    const state = rootState(preVisitNoteWorkflow);
 
-  // Add the state to the visits map
-  visits[id] = state;
+    // Add the state to the visits map
+    visits[id] = state;
 
-  // Start the visit in the background
-  runVisit(id);
+    // Start the visit in the background
+    runVisit(id);
 
-  return {
-    id,
-    status: state.status,
-  };
+    return {
+        id,
+        status: state.status,
+    };
 });
 
 /**
  * Call this endpoint to get pending tool calls
  */
 server.get(
-  "/visits/:id",
-  async (req: FastifyRequest<{ Params: { id: string } }>) => {
-    const state = visits[req.params.id];
-    if (!state) {
-      throw new Error("Workflow not found");
-    }
-    return getAllMissingToolCalls(state);
-  },
+    "/visits/:id",
+    async (req: FastifyRequest<{ Params: { id: string } }>) => {
+        const state = visits[req.params.id];
+        if (!state) {
+            throw new Error("Workflow not found");
+        }
+        return getAllMissingToolCalls(state);
+    },
 );
 
 /**
  * Adds a message to the workflow.
  */
 server.post(
-  "/visits/:id/messages",
-  async (
-    req: FastifyRequest<{ Params: { id: string }; Body: ToolCallMessage }>,
-  ) => {
-    const state = visits[req.params.id];
-    if (!state) {
-      throw new Error("Workflow not found.");
-    }
+    "/visits/:id/messages",
+    async (
+        req: FastifyRequest<{ Params: { id: string }; Body: ToolCallMessage }>,
+    ) => {
+        const state = visits[req.params.id];
+        if (!state) {
+            throw new Error("Workflow not found.");
+        }
 
-    if (!hasPausedStatus(state)) {
-      throw new Error("Workflow is not waiting for a message right now.");
-    }
+        if (!hasPausedStatus(state)) {
+            throw new Error("Workflow is not waiting for a message right now.");
+        }
 
-    // Add the tool response to the workflow
-    // and update the statuses
-    const newState = resumeCompletedToolCalls(
-      addToolResponse(state, req.body.tool_call_id, req.body.content),
-    );
+        // Add the tool response to the workflow
+        // and update the statuses
+        const newState = resumeCompletedToolCalls(
+            addToolResponse(state, req.body.tool_call_id, req.body.content),
+        );
 
-    const hasAllToolCalls = getAllMissingToolCalls(newState).length === 0;
+        const hasAllToolCalls = getAllMissingToolCalls(newState).length === 0;
 
-    // Run the workflow again
-    if (hasAllToolCalls) {
-      visits[req.params.id] = await teamwork(preVisitNoteWorkflow, newState);
-    }
+        // Run the workflow again
+        if (hasAllToolCalls) {
+            visits[req.params.id] = await teamwork(
+                preVisitNoteWorkflow,
+                newState,
+            );
+        }
 
-    return {
-      hasAllToolCalls,
-    };
-  },
+        return {
+            hasAllToolCalls,
+        };
+    },
 );
 
 /**
@@ -119,10 +122,10 @@ console.log(s`
 `);
 
 type ToolCallMessage = {
-  tool_call_id: string;
-  content: string;
+    tool_call_id: string;
+    content: string;
 };
 
 async function runVisit(id: string) {
-  visits[id] = await teamwork(preVisitNoteWorkflow, visits[id], false);
+    visits[id] = await teamwork(preVisitNoteWorkflow, visits[id], false);
 }

@@ -6,24 +6,24 @@ import { workflow } from "nest-airkflow";
 import { lookupWikipedia } from "./tools/wikipedia.js";
 
 const personalizedActivityPlanner = agent({
-  description: `
+    description: `
     You are skilled at researching and finding cool things to do at the destination,
     including activities and events that match the traveler's interests and age group.
   `,
 });
 
 const landmarkScout = agent({
-  description: `
+    description: `
     You are skilled at researching and finding interesting landmarks at the destination.
     Your find historical landmarks, museums, and other interesting places.
   `,
-  tools: {
-    lookupWikipedia,
-  },
+    tools: {
+        lookupWikipedia,
+    },
 });
 
 const restaurantScout = agent({
-  description: `
+    description: `
     As a food lover, you know the best spots in town for a delightful culinary experience.
     You also have a knack for finding picturesque and entertaining locations.
     Your find highly-rated restaurants and dining experiences at the destination,
@@ -32,19 +32,19 @@ const restaurantScout = agent({
 });
 
 const itineraryCompiler = agent({
-  description: `
+    description: `
     With an eye for detail, you organize all the information into a coherent and enjoyable travel plan.
   `,
 });
 
 export const researchTripWorkflow = workflow({
-  team: {
-    personalizedActivityPlanner,
-    restaurantScout,
-    landmarkScout,
-    itineraryCompiler,
-  },
-  description: `
+    team: {
+        personalizedActivityPlanner,
+        restaurantScout,
+        landmarkScout,
+        itineraryCompiler,
+    },
+    description: `
     Research and find cool things to do in Wrocław, Poland.
 
     Focus:
@@ -53,7 +53,7 @@ export const researchTripWorkflow = workflow({
       - landmarks with historic context.
       - picturesque and entertaining locations.
   `,
-  knowledge: `
+    knowledge: `
     Traveler's information:
       - Origin: New York, USA
       - Destination: Wrocław, Poland
@@ -65,15 +65,15 @@ export const researchTripWorkflow = workflow({
     
     Flights and hotels are already confirmed.
   `,
-  output: `
+    output: `
     Comprehensive day-by-day plan for the trip to Wrocław, Poland.
     Ensure the plan includes flights, hotel information, and all planned activities and dining experiences.
   `,
-  // Claude
-  // provider: openrouter({
-  //   model: 'anthropic/claude-3.5-haiku-20241022:beta',
-  //   structured_output: false,
-  // }),
-  // Grok
-  // provider: grok(),
+    // Claude
+    // provider: openrouter({
+    //   model: 'anthropic/claude-3.5-haiku-20241022:beta',
+    //   structured_output: false,
+    // }),
+    // Grok
+    // provider: grok(),
 });

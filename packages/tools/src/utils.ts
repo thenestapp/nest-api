@@ -6,14 +6,14 @@ import dedent from "dedent";
  * Get API key from environment variables or prompt user for it.
  */
 export async function getApiKey(name: string, key: string): Promise<string> {
-  if (key in process.env) {
-    return process.env[key]!;
-  }
-  return (async () => {
-    let apiKey: string | symbol;
-    do {
-      apiKey = await text({
-        message: dedent`
+    if (key in process.env) {
+        return process.env[key]!;
+    }
+    return (async () => {
+        let apiKey: string | symbol;
+        do {
+            apiKey = await text({
+                message: dedent`
           ${chalk.bold(`Please provide your ${name} API key.`)}
 
           To skip this message, set ${chalk.bold(key)} env variable, and run again. 
@@ -30,15 +30,17 @@ export async function getApiKey(name: string, key: string): Promise<string> {
               \`\`\`
             `)},
           `,
-        validate: (value) =>
-          value.length > 0 ? undefined : `Please provide a valid ${key}.`,
-      });
-    } while (typeof apiKey === "undefined");
+                validate: (value) =>
+                    value.length > 0
+                        ? undefined
+                        : `Please provide a valid ${key}.`,
+            });
+        } while (typeof apiKey === "undefined");
 
-    if (typeof apiKey === "symbol") {
-      process.exit(0);
-    }
+        if (typeof apiKey === "symbol") {
+            process.exit(0);
+        }
 
-    return apiKey;
-  })();
+        return apiKey;
+    })();
 }

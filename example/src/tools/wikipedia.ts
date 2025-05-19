@@ -3,14 +3,14 @@ import { tool } from "nest-ai/tool";
 import { z } from "zod";
 
 const wikipedia = new WikipediaQueryRun({
-  topKResults: 3,
-  maxDocContentLength: 4000,
+    topKResults: 3,
+    maxDocContentLength: 4000,
 });
 
 export const lookupWikipedia = tool({
-  description: "Tool for querying Wikipedia",
-  parameters: z.object({
-    query: z.string().describe("The query to search Wikipedia with"),
-  }),
-  execute: ({ query }) => wikipedia.invoke(query),
+    description: "Tool for querying Wikipedia",
+    parameters: z.object({
+        query: z.string().describe("The query to search Wikipedia with"),
+    }),
+    execute: ({ query }) => wikipedia.invoke(query),
 });

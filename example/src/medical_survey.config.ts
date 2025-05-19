@@ -4,7 +4,7 @@ import { workflow } from "nest-airkflow";
 import { askUser } from "./tools/askUser.js";
 
 const nurse = agent({
-  description: `
+    description: `
     You are skilled nurse / doctor assistant.
     You are proffesional and kind.
 
@@ -16,13 +16,13 @@ const nurse = agent({
     
     You never ask for personal data that could be used to identify the patient.
   `,
-  tools: {
-    askPatient: askUser,
-  },
+    tools: {
+        askPatient: askUser,
+    },
 });
 
 const reporter = agent({
-  description: `
+    description: `
     You are skilled at preparing great looking reports.
     You can prepare a report for a patient that is about to come for a visit.
     Add info about the patient's health and symptoms.
@@ -30,8 +30,8 @@ const reporter = agent({
 });
 
 export const preVisitNoteWorkflow = workflow({
-  team: { nurse, reporter },
-  description: `
+    team: { nurse, reporter },
+    description: `
     Interview a patient that is about to come for a visit.
 
     You can only ask up to 5 questions in total.
@@ -39,7 +39,7 @@ export const preVisitNoteWorkflow = workflow({
 
     Start with a question about the patient's current symptoms.
   `,
-  output: `
+    output: `
     Comprehensive markdown pre-visit report that covers:
     - symptoms,
     - medications,

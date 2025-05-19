@@ -5,22 +5,25 @@ import { Workflow } from "nest-airkflow";
  * Represents a single test case.
  */
 export type TestCase = {
-  case: string;
-  id: string;
-  run:
-    | ((workflow: Workflow, state: WorkflowState) => Promise<SingleTestResult>)
-    | null;
+    case: string;
+    id: string;
+    run:
+        | ((
+              workflow: Workflow,
+              state: WorkflowState,
+          ) => Promise<SingleTestResult>)
+        | null;
 };
 
 /**
  * Represents a test suite containing multiple test cases.
  */
 export type TestSuite = {
-  description: string;
-  workflow: TestCase[];
-  team: {
-    [key: string]: TestCase[];
-  };
+    description: string;
+    workflow: TestCase[];
+    team: {
+        [key: string]: TestCase[];
+    };
 };
 
 /**
@@ -32,16 +35,16 @@ export type TestSuiteOptions = TestSuite;
  * Represents the result of a single test case.
  */
 export type SingleTestResult = {
-  passed: boolean;
-  reasoning: string;
-  id: string;
+    passed: boolean;
+    reasoning: string;
+    id: string;
 };
 
 /**
  * Represents the success result of a test suite.
  */
 export type TestResultsSuccess = {
-  tests: SingleTestResult[];
+    tests: SingleTestResult[];
 };
 
 /**
@@ -58,23 +61,23 @@ export type TestResults = TestResultsSuccess | TestResultsFailure;
  * Represents the overall result of a test suite.
  */
 export type TestSuiteResult = {
-  passed: boolean;
-  results: TestResults[];
+    passed: boolean;
+    results: TestResults[];
 };
 
 const defaults = {
-  passed: false,
+    passed: false,
 };
 
 /**
  * Represents a request to run a test suite.
  */
 export type TestRequest = {
-  workflow: Workflow;
-  state: WorkflowState;
-  teamRouting: Array<string>;
-  requestedFor?: string;
-  tests: TestCase[];
+    workflow: Workflow;
+    state: WorkflowState;
+    teamRouting: Array<string>;
+    requestedFor?: string;
+    tests: TestCase[];
 };
 
 /**
@@ -84,10 +87,10 @@ export type TestRequest = {
  * @returns The created test suite.
  */
 export const suite = (options: TestSuiteOptions): TestSuite => {
-  return {
-    ...defaults,
-    ...options,
-  };
+    return {
+        ...defaults,
+        ...options,
+    };
 };
 
 /**
@@ -99,15 +102,18 @@ export const suite = (options: TestSuiteOptions): TestSuite => {
  * @returns The created test case.
  */
 export const test = (
-  id: string,
-  testCase: string,
-  run?:
-    | ((workflow: Workflow, state: WorkflowState) => Promise<SingleTestResult>)
-    | null,
+    id: string,
+    testCase: string,
+    run?:
+        | ((
+              workflow: Workflow,
+              state: WorkflowState,
+          ) => Promise<SingleTestResult>)
+        | null,
 ): TestCase => {
-  return {
-    id,
-    case: testCase,
-    run: run || null,
-  };
+    return {
+        id,
+        case: testCase,
+        run: run || null,
+    };
 };

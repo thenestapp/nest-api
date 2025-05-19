@@ -9,36 +9,36 @@ Built with TypeScript and designed to be serverless-ready.
 ## Table of Contents
 
 - [Getting Started](#getting-started)
-  - [Using create-nest-ai](#using-create-nest-ai)
-  - [Manual Installation](#manual-installation)
+    - [Using create-nest-ai](#using-create-nest-ai)
+    - [Manual Installation](#manual-installation)
 - [Why Another AI Agent Framework?](#why-another-ai-agent-framework)
 - [Core Concepts](#core-concepts)
-  - [Easy to create and compose](#easy-to-create-and-compose)
-  - [Infrastructure-agnostic](#infrastructure-agnostic)
-  - [Stateless](#stateless)
-  - [Batteries included](#batteries-included)
+    - [Easy to create and compose](#easy-to-create-and-compose)
+    - [Infrastructure-agnostic](#infrastructure-agnostic)
+    - [Stateless](#stateless)
+    - [Batteries included](#batteries-included)
 - [Agents](#agents)
-  - [Creating Custom Agents](#creating-custom-agents)
-  - [Built-in Agents](#built-in-agents)
-  - [Replacing Built-in Agents](#replacing-built-in-agents)
+    - [Creating Custom Agents](#creating-custom-agents)
+    - [Built-in Agents](#built-in-agents)
+    - [Replacing Built-in Agents](#replacing-built-in-agents)
 - [Workflows](#workflows)
 - [Workflow States](#workflow-states)
-  - [Root State](#root-state)
-  - [Child State](#child-state)
-  - [Delegating Tasks](#delegating-tasks)
-  - [Handing off Tasks](#handing-off-tasks)
+    - [Root State](#root-state)
+    - [Child State](#child-state)
+    - [Delegating Tasks](#delegating-tasks)
+    - [Handing off Tasks](#handing-off-tasks)
 - [Providers](#providers)
-  - [Built-in Providers](#built-in-providers)
-  - [Using Different Providers](#using-different-providers)
-  - [Creating Custom Providers](#creating-custom-providers)
+    - [Built-in Providers](#built-in-providers)
+    - [Using Different Providers](#using-different-providers)
+    - [Creating Custom Providers](#creating-custom-providers)
 - [Tools](#tools)
-  - [Built-in Tools](#built-in-tools)
-  - [Creating Custom Tools](#creating-custom-tools)
-  - [Using Tools](#using-tools)
+    - [Built-in Tools](#built-in-tools)
+    - [Creating Custom Tools](#creating-custom-tools)
+    - [Using Tools](#using-tools)
 - [Execution](#execution)
-  - [Completing the workflow](#completing-the-workflow)
-  - [Long-running operations](#long-running-operations)
-  - [Custom execution](#custom-execution)
+    - [Completing the workflow](#completing-the-workflow)
+    - [Long-running operations](#long-running-operations)
+    - [Custom execution](#custom-execution)
 - [Test framework](./packages/bdd/README.md)
 - [Contributors](#contributors)
 - [Made with ❤️ at Callstack](#made-with-❤️-at-callstack)
@@ -75,17 +75,17 @@ import { solution, workflow } from "nest-airkflow";
 import { lookupWikipedia } from "./tools/wikipedia.js";
 
 const activityPlanner = agent({
-  description: `You are skilled at creating personalized itineraries...`,
+    description: `You are skilled at creating personalized itineraries...`,
 });
 
 const landmarkScout = agent({
-  description: `You research interesting landmarks...`,
-  tools: { lookupWikipedia },
+    description: `You research interesting landmarks...`,
+    tools: { lookupWikipedia },
 });
 
 const workflow = workflow({
-  team: { activityPlanner, landmarkScout },
-  description: `Plan a trip to Wrocław, Poland...`,
+    team: { activityPlanner, landmarkScout },
+    description: `Plan a trip to Wrocław, Poland...`,
 });
 
 const result = await teamwork(workflow);
@@ -148,8 +148,8 @@ To create a custom agent, you can use our `agent` helper function or implement t
 import { agent } from "nest-aient";
 
 const myAgent = agent({
-  role: "<< your role >>",
-  description: "<< your description >>",
+    role: "<< your role >>",
+    description: "<< your description >>",
 });
 ```
 
@@ -177,7 +177,7 @@ For example, to replace built-in `supervisor` agent, you can do it like this:
 import { supervisor } from "./my-supervisor.js";
 
 workflow({
-  team: { supervisor },
+    team: { supervisor },
 });
 ```
 
@@ -232,8 +232,8 @@ You can create it manually, or use `childState` function.
 
 ```ts
 const child = childState({
-  agent: "<< agent name >>",
-  messages: user("<< task description >>"),
+    agent: "<< agent name >>",
+    messages: user("<< task description >>"),
 });
 ```
 
@@ -246,21 +246,21 @@ To delegate the task, just add a new child state to your agent's state.
 
 ```ts
 const state = {
-  ...state,
-  children: [
-    ...state.children,
-    childState({
-      /** agent to work on the task */
-      agent: "<< agent name >>",
-      /** task description */
-      messages: [
-        {
-          role: "user",
-          content: "<< task description >>",
-        },
-      ],
-    }),
-  ],
+    ...state,
+    children: [
+        ...state.children,
+        childState({
+            /** agent to work on the task */
+            agent: "<< agent name >>",
+            /** task description */
+            messages: [
+                {
+                    role: "user",
+                    content: "<< task description >>",
+                },
+            ],
+        }),
+    ],
 };
 ```
 
@@ -276,8 +276,8 @@ To hand off the task, you can replace your agent's state with a new state, that 
 
 ```ts
 const state = childState({
-  agent: "<< new agent name >>",
-  messages: state.messages,
+    agent: "<< new agent name >>",
+    messages: state.messages,
 });
 ```
 
@@ -301,11 +301,11 @@ If you're working with an OpenAI compatible provider, you can use the `openai` p
 
 ```ts
 openai({
-  model: "<< your model >>",
-  options: {
-    apiKey: "<< your_api_key >>",
-    baseURL: "<< your_base_url >>",
-  },
+    model: "<< your model >>",
+    options: {
+        apiKey: "<< your_api_key >>",
+        baseURL: "<< your_base_url >>",
+    },
 });
 ```
 
@@ -319,8 +319,8 @@ To do it for the entire workflow:
 import { grok } from "nest-aioviders/grok";
 
 workflow({
-  /** other options go here */
-  provider: grok(),
+    /** other options go here */
+    provider: grok(),
 });
 ```
 
@@ -330,8 +330,8 @@ To change it for specific agent:
 import { grok } from "nest-aioviders/grok";
 
 agent({
-  /** other options go here */
-  provider: grok(),
+    /** other options go here */
+    provider: grok(),
 });
 ```
 
@@ -343,11 +343,11 @@ To create a custom provider, you need to implement the `Provider` interface.
 
 ```ts
 const myProvider = (options: ProviderOptions): Provider => {
-  return {
-    chat: async () => {
-      /** your implementation goes here */
-    },
-  };
+    return {
+        chat: async () => {
+            /** your implementation goes here */
+        },
+    };
 };
 ```
 
@@ -369,13 +369,13 @@ To create a custom tool, you can use our `tool` helper function or implement the
 import { tool } from "nest-aiols";
 
 const myTool = tool({
-  description: "My tool description",
-  parameters: z.object({
-    /** your Zod schema goes here */
-  }),
-  execute: async (parameters, context) => {
-    /** your implementation goes here */
-  },
+    description: "My tool description",
+    parameters: z.object({
+        /** your Zod schema goes here */
+    }),
+    execute: async (parameters, context) => {
+        /** your implementation goes here */
+    },
 });
 ```
 
@@ -387,8 +387,8 @@ To give an agent access to a tool, you need to add it to the agent's `tools` pro
 
 ```ts
 agent({
-  role: "<< your role >>",
-  tools: { searchWikipedia },
+    role: "<< your role >>",
+    tools: { searchWikipedia },
 });
 ```
 
